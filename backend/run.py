@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify, g
 from datetime import datetime
-from db_setup.mongodb.database_handler import db_add_chat_log, db_get_all_data_for_chat, db_get_chat_list, db_create_new_chat, db_remove_chat, db_get_maximum_sub_id
 from flask_cors import CORS
 from openai import OpenAI
+
+from db_setup.mongodb.database_handler import db_get_all_data_for_chat, db_remove_chat, db_get_maximum_sub_id
+from db_setup.mysql.database_handler import db_add_chat_log, db_create_new_chat, db_get_chat_list
+
 
 MODEL_GPT_4 = "gpt-4"
 MODEL_GPT_3_5 = "gpt-3.5-turbo"
@@ -10,9 +13,11 @@ MODEL_GPT_3_5 = "gpt-3.5-turbo"
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes in the app
 
+app.config.from_pyfile('config.py')
+
 client = OpenAI(
     # This is the default and can be omitted
-    api_key= "replace openAI api key",
+    api_key= app.config.get('API_KEY'),
 )
 
 def get_completion(prompt):
@@ -50,7 +55,8 @@ def ask_a_question():
     if request.method == 'POST': 
         username = request.json['username']
         prompt = request.json['prompt']
-        response = get_completion(prompt)
+        # response = get_completion(prompt)
+        response = "sdf"
 
         # Get current time
         current_time = datetime.now()
