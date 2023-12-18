@@ -10,6 +10,7 @@ import '../../styles/layout/chat/ChatPage.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 import ChatContent from '../../components/chat/ChatContent';
+import ChatContentServerStatus from '../../components/chat/ChatContent/ServerStatus'
 import ChatHistory from '../../components/chat/ChatHistory';
 import ChatInput from '../../components/chat/ChatInput';
 
@@ -25,7 +26,6 @@ const ChatPage = () => {
   const [chatLists, setChatLists] = useState([]);
   const [chatContents, setChatContents] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
-  const [isLoading, setIsLoading] = useState('loading-circle');
 
   useEffect(() => {
     const postData = { username: "user" };
@@ -66,7 +66,6 @@ const ChatPage = () => {
       .catch(error => toast.error('Error fetching data:' + error));
   }
 
-
   useEffect(() => {
     containerRef.current.scrollTop = containerRef.current.scrollHeight;
   }, [chatContents]);
@@ -96,15 +95,12 @@ const ChatPage = () => {
                 <div className='chat-content-user'>
                   {item.question}
                 </div>
-                <br/>
-                <div className='chat-content-server-status'>
-                  <div className='loading-text'>Generating answers for you...</div>
-                </div>
+                
+                <ChatContentServerStatus waitingForServer={false}/>
+                
                 <div className='chat-content-ai'>
                   {item.answer}
                 </div>
-                <br/>
-                <br/>
               </React.Fragment>
             ))
           }
@@ -146,7 +142,6 @@ const ChatPage = () => {
     }
 
     // Api Call
-    setIsLoading('loading-circle');
     setChatContents(prevComponents => [
       ...prevComponents,
       <>
@@ -161,9 +156,7 @@ const ChatPage = () => {
       }
       </div>
 
-      <div className='chat-content-server-status'>
-        <div className='loading-text'>Generating answers for you...</div>
-      </div>
+      <ChatContentServerStatus waitingForServer={isWaiting}/>
       </>
     ]);
 
@@ -173,13 +166,12 @@ const ChatPage = () => {
 
   const askAQuestion = () => {
     const postData = { username: "user", prompt: chatText };
-    //setIsWaiting(true);
+    setIsWaiting(true);
     axios.post('http://localhost:5000/api/ask-a-question', postData)
       .then(response => {
-        //setIsWaiting(false);
         setTimeout(() => {
-          setIsLoading('loading-done');
-        }, 1000); // 1 second delay (adjust as needed)
+          setIsWaiting(false);
+        }, 1000);
         
         setChatContents(prevComponents => [
           ...prevComponents,
@@ -199,7 +191,6 @@ const ChatPage = () => {
       })
       .catch(error => toast.error('Error fetching data:' + error))
       .finally(() => {
-        setIsLoading('loading-done');
         textareaRef.current.focus();
       });      
   }
@@ -244,9 +235,9 @@ const ChatPage = () => {
 
         <ChatHistory chatlistcontainerRef={chatlistcontainerRef} chatLists={chatLists} />
 
-        <ChatContent containerRef={containerRef} chatContents={chatContents} key={0}/>
+        <ChatContent containerRef={containerRef} chatContents={chatContents}/>
 
-        <ChatInput textareaRef={textareaRef} chatText={chatText} canEdit={canEdit} handleChatInputKeyDown={handleChatInputKeyDown} handleChatTextChange={handleChatTextChange} sendClicked={sendClicked} learnClicked={learnClicked} newChatClicked={newChatClicked} isWaiting={isWaiting} />
+        <ChatInput textareaRef={textareaRef} chatText={chatText} canEdit={canEdit} handleChatInputKeyDown={handleChatInputKeyDown} handleChatTextChange={handleChatTextChange} sendClicked={sendClicked} learnClicked={learnClicked} newChatClicked={newChatClicked} isWaiting={false} />
 
         <ToastContainer
           position="top-right"
