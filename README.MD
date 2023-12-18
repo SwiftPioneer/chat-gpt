@@ -1,14 +1,37 @@
-## DB Setup
-1. downMongoDB server here:
+## 1. DB Setup
+### 1. DB Setup for MongoDB
+1. DownMongoDB server here:
 https://www.mongodb.com/try/download/community
 
-2. install mongodb with the default settings.
-3. run mongodb service.
+2. Install mongodb with the default settings.
+3. Run mongodb service.
 
 
 
+### 2. DB Setup for MySQL
+1. Check your MySQL server running.
+2. Open file at 'backend/db_setup/mysql/db_setup.py'
+3. Type your db informations.
 
-## Backend
+```bash
+host = "your MySQL Server Host"         default: localhost
+user = "your DB user name"              default: root
+password = "your our DB Password"       default: 
+dbname = "your db name"                 default: tax_genii
+tablemame = "your table name"           default: chat_logs
+```
+
+
+
+## 2. ChatGPT API KEY
+1. In backend directory create a new file called config.py
+2. Open that file (backend/config.py) and place your api key information.
+
+```bash
+API_KEY = "Your API KEY"
+```
+
+## 3. Backend
 
 #### Go to Backend and setup python libraries
 ```bash
@@ -16,7 +39,7 @@ cd backend
 pip install -r requirements.txt
 ```
 
-#### run Backend
+#### Run backend
 ```bash
 python server.py
 ```
@@ -24,15 +47,15 @@ python server.py
 
 
 
-## Frontend
+## 4. Frontend
 
-#### Go to Frontend and setup npm
+#### Go to frontend and setup npm
 ```bash
 cd frontend
 npm install
 ```
 
-#### run Frontend
+#### Run frontend
 ```bash
 npm start
 ```
