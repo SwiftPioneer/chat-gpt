@@ -32,16 +32,16 @@ def db_add_chat_log(log_data):
 
 
 def db_get_all_data_for_chat(username, chat_id):
-  select_query = f"SELECT * FROM {tablemame} where id = {chat_id} and header = 0 and user = {username}"
+  select_query = f"SELECT id, question, answer FROM {tablemame} where id = {chat_id} and header = 0 and user = {username}"
   cursor.execute(select_query)
   filtered_data = cursor.fetchall()
   
   response_data = []
   for document in filtered_data:
     new_data = {}
-    new_data["id"] = document["id"]
-    new_data["question"] = document["question"]
-    new_data["answer"] = document["answer"]
+    new_data["id"] = document[0]
+    new_data["question"] = document[1]
+    new_data["answer"] = document[2]
     response_data.append(new_data)
 
   return response_data
@@ -71,14 +71,14 @@ def db_get_chat_list(username):
 
 
 def db_create_new_chat(username, datetime):
-  select_query = f"SELECT * FROM {tablemame} where header = 1 and user = {username}"
+  select_query = f"SELECT id FROM {tablemame} where header = 1 and user = {username}"
   cursor.execute(select_query)
 
   new_id = 0
   rows = cursor.fetchall()
   for row in rows:
-      if row["id"] > new_id:
-        new_id = row["id"]
+      if row[0] > new_id:
+        new_id = row[0]
 
   new_id += 1
 
@@ -95,10 +95,8 @@ def db_create_new_chat(username, datetime):
 
 
 def db_remove_chat(username, chat_id):
-  collection = db[CHAT_LOGS_COLLECTION_NAME]
-
-  query_multiple = {"user": username, 'id': chat_id }
-  result_multiple = collection.delete_many(query_multiple)
+  select_query = f"DELETE FROM {tablemame} where user = {username} and id = {chat_id}"
+  cursor.execute(select_query)
 
   result_multiple = 'success'
   return result_multiple

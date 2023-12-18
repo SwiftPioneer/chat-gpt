@@ -10,9 +10,11 @@ MODEL_GPT_3_5 = "gpt-3.5-turbo"
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes in the app
 
+app.config.from_pyfile('config.py')
+
 client = OpenAI(
     # This is the default and can be omitted
-    api_key= "replace openAI api key",
+    api_key= app.config.get('API_KEY'),
 )
 
 def get_completion(prompt):
