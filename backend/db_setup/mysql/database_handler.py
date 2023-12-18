@@ -56,6 +56,8 @@ def db_add_chat_log(log_data):
   data_to_insert = (log_data["id"], log_data["user"], log_data["datetime"], log_data["question"], log_data["answer"], log_data["header"])
   cursor.execute(insert_query, data_to_insert)
 
+  connection.commit()
+
   # db_close_connection()
 
 
@@ -137,9 +139,11 @@ def db_create_new_chat(username, datetime):
 def db_remove_chat(username, chat_id):
   # db_get_connection()
 
-  select_query = f"DELETE FROM {tablemame} where user = {username} and id = {chat_id}"
-  cursor.execute(select_query)
+  deletequery = f"DELETE FROM {tablemame} where user = {username} and id = {chat_id};"
+  print(deletequery)
+  cursor.execute(deletequery)
 
+  connection.commit()
   # db_close_connection()
 
   result_multiple = 'success'
