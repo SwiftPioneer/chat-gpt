@@ -17,6 +17,7 @@ import Sidebar from '../../components/chat/Sidebar/Sidebar';
 import ChatContent from '../../components/chat/Content/ChatContent';
 import ChatInput from '../../components/chat/ChatInput';
 
+import AnswerMessage from '../../components/chat/Content/AnswerMessage';
 import { SysMessage } from '../../components/chat/Content/SysMessage'
 
 import { API_BASE_URL } from '../../utils/const';
@@ -113,22 +114,10 @@ const ChatPage = () => {
               <div className='chat-content-user'>
                 {item.question}
               </div>
-              
               <SysMessage initialStatus={false} chatMsg="Generating answers for you..."/>
               
-              <div className='chat-content-answer-header'>
-                <FontAwesomeIcon icon={faList} size='lg'/>
-                &nbsp;&nbsp;&nbsp;Sources
-              </div>
-              <div className='chat-content-answer-header'>
-                <FontAwesomeIcon icon={faAlignLeft} size='lg'/>
-                &nbsp;&nbsp;&nbsp;Answer
-              </div>
-              <div className='chat-content-ai'>
-                {item.answer}
-                <br/><br/>
-                <button className='chat-content-feedback-button'>Give Feedback</button>
-              </div>
+              <AnswerMessage answerMsg={item.answer}/>
+
             </React.Fragment>
           ))
         }
@@ -217,20 +206,7 @@ const ChatPage = () => {
         setChatContents(prevComponents => [
           ...prevComponents,
           <>
-          <div className='chat-content-answer-header'>
-            <FontAwesomeIcon icon={faList} size='lg'/>
-            &nbsp;&nbsp;&nbsp;Sources
-          </div>
-          <div className='chat-content-answer-header'>
-            <FontAwesomeIcon icon={faAlignLeft} size='lg'/>
-            &nbsp;&nbsp;&nbsp;Answer
-          </div>
-          <div className='chat-content-ai'>
-          {response.data.message}
-          <br/>
-          <br/>
-          <button className='chat-content-feedback-button'>Give Feedback</button>
-          </div>
+          <AnswerMessage answerMsg={response.data.message}/>
           </>
         ]);
 
