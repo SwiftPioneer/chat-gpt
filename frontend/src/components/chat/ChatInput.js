@@ -13,12 +13,12 @@ const ChatInput = ({textareaRef, chatText, canEdit, handleChatInputKeyDown, hand
                 <textarea className="chat-input-textarea-field" placeholder="Type your message here..." ref={textareaRef} value={chatText} onKeyDown={handleChatInputKeyDown} onChange={handleChatTextChange} />
 
                 <div className='chat-input-button-send-group'>
-                    <Tooltip title="Mark prompt as scenario.">
+                    <Tooltip title="Send prompt.(Ctrl + Enter)">
                         <button className='chat-input-button-send' onClick={sendClicked} disabled={!isSendBtnActive}>
                             <FontAwesomeIcon icon={faPaperPlane} size='xl'/>
                         </button>
                     </Tooltip>
-                    <Tooltip title="Send prompt.">
+                    <Tooltip title="Mark prompt as scenario.">
                         <button className={isLearnActive ? 'chat-input-button-learn' : 'chat-input-button-learn-inactive'} onClick={learnClicked}>
                             <FontAwesomeIcon icon={faLink} />
                         </button>

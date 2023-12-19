@@ -131,7 +131,7 @@ const ChatPage = () => {
   }, [selectedChat]);
 
   const handleChatInputKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && e.ctrlKey) {
       e.preventDefault();
       sendClicked();
     } 
