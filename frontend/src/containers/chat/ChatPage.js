@@ -43,7 +43,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     refreshChatList();
-  }, [selectedChat]);
+  }, [selectedChat, messages]);
 
   const refreshChatList = () => {
     const newChatLists = messages.map(item => (
@@ -68,10 +68,11 @@ const ChatPage = () => {
       const response = await axios.post(`${API_BASE_URL}/get-chat-list`, postData);
       setCanEdit(true);
       const activeId = response.data.active_id;
-      setSelectedChat(activeId);
+      
       setMessages(response.data.message);
-
-      refreshChatList(response, activeId);
+      setSelectedChat(activeId);
+      
+      //refreshChatList(response, activeId);
       textareaRef.current.focus();
     } catch (error) {
       toast.error('Error fetching chat list: ' + error);
@@ -201,21 +202,9 @@ const ChatPage = () => {
 
         if (isNewChat) {
           const newChatId = response.data.newChatId;
-
+          const newMessage = { id: response.data.newChatId, title: response.data.title };
+          messages.push(newMessage);
           setSelectedChat(newChatId);
-          setChatLists(prevComponents => [
-            ...prevComponents,
-            <React.Fragment>
-              <div className='chat-history-body'>
-                <Link onClick={() => {chatSelected(newChatId);} } style={{color:'black', textDecoration: 'none', height:'100%'}}>
-                  {response.data.title}
-                </Link>
-                <button className='button-del' onClick={() => delClicked(newChatId)}  disabled={isWaiting}>
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </div>
-            </React.Fragment>
-          ]);
         }
       })
       .catch(error => toast.error('Error fetching data:' + error))
@@ -235,7 +224,7 @@ const ChatPage = () => {
       .then(response => {
         setChatContents([]);
         getChatListFromSever(postData);
-
+        
         toast.success("Chat Deleted Successfully.");
       })
       .catch(error => toast.error('Error fetching data:' + error));
