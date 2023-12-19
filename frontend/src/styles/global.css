@@ -14,6 +14,22 @@ body {
     align-content: center;
 }
 
+.banner-container {
+    grid-row: 1;
+    grid-column-start: 1;
+    grid-column-end: 2;
+
+    align-items: center;
+}
+
+.image-banner {
+    margin-top: 20px;
+    margin-left: 20px;
+    width: auto;
+    height: 50%;
+}
+
+
 .button-del {
     position: absolute;
     width: 30px;

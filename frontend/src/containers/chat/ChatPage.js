@@ -15,6 +15,7 @@ import ChatContent from '../../components/chat/ChatContent';
 import { SysMessage } from '../../components/chat/ChatContent/SysMessage'
 import ChatHistory from '../../components/chat/ChatHistory';
 import ChatInput from '../../components/chat/ChatInput';
+import ImageBanner from '../../components/chat/ImageBanner';
 
 import { chopString } from '../../utils/utils';
 import { API_BASE_URL } from '../../utils/const';
@@ -258,9 +259,7 @@ const ChatPage = () => {
   return (
     <div>
       <div className='chat-container'>
-        <div className='chat-header'>
-          <p className='header-title'>Tax Genii</p>
-        </div>
+        <ImageBanner imgPath="images/banner.png"/>
 
         <ChatHistory chatlistcontainerRef={chatlistcontainerRef} chatLists={chatLists} />
 
