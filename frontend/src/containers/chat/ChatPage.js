@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faAlignLeft, faList } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { publish } from '../../event/event';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -74,7 +74,7 @@ const ChatPage = () => {
             {item.title}
           </Link>
           <button className='button-del' onClick={() => delClicked(item.id, item.title)} disabled={isWaiting}>
-            <FontAwesomeIcon icon={faTrash} size='lg'/>
+            <FontAwesomeIcon icon={faTrashCan} size='lg'/>
           </button>
         </div>
       </React.Fragment>
