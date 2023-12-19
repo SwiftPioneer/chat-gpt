@@ -188,14 +188,11 @@ const ChatPage = () => {
           ...prevComponents,
           <>
           <div className='chat-content-ai'>
-          {
-            response.data.message.split('\n').map((line, index) => (
-              <React.Fragment>
-                {line}
-                <br />
-              </React.Fragment>
-            ))
-          }
+          {response.data.message}
+          <br/>
+          <br/>
+          <button className='chat-content-feedback-button'>Give Feedback</button>
+          <div className='chat-content-ai-horizontal-line'></div>
           </div>
           </>
         ]);
