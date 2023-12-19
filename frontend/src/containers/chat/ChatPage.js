@@ -49,7 +49,7 @@ const ChatPage = () => {
     const newChatLists = messages.map(item => (
       <React.Fragment key={item.id}>
         {item.datetime && <div className='chat-history-date'>{item.datetime}</div>}
-        <div className='chat-history-body'  style = {{backgroundColor: selectedChat == item.id ? 'rgba(255, 255, 255, 0.2)' : 'white'}}>
+        <div className='chat-history-body'  style = {{backgroundColor: selectedChat != item.id ? 'rgba(255, 255, 255, 0.2)' : 'white'}}>
           <Link onClick={() => chatSelected(item.id)} style={{ color: 'black', textDecoration: 'none', height: '100%' }}>
             {item.title}
           </Link>
