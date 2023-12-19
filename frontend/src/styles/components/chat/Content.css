@@ -16,7 +16,7 @@
 }
   
 .chat-content-container::-webkit-scrollbar-thumb {
-    background-color: gray;
+    background-color: rgb(182, 182, 182);
     border-radius: 4px;
 }
 
@@ -44,7 +44,7 @@
     font-family: Arial, sans-serif;
 }
 
-.chat-content-answer {
+.chat-content-answer-header {
     position: relative;
 
     margin-left: 30px;
@@ -94,23 +94,24 @@
 .chat-content-feedback-button {
     height: 30px;
     width:max-content;
-    border: none;
-    color: white;
-    background-color: #007bff;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+
+    border: 2px solid #d3d3d3; /* Soft gray border */
+    color: #000000; /* Soft gray text color */
+    background-color: #f5f5f5; /* Soft gray background color */
   }
   
   .chat-content-feedback-button:hover {
-    background-color: #4ba2ff;
-    color: white;
+    background-color: #d3d3d3;
+    color: #404040; /* Darker gray text color on hover */
   }
   
   .chat-content-feedback-button:active {
-    background-color: #0056b3;
-    border-color: #0056b3;
-    color: white;
+    background-color: #b0b0b0; /* Even darker gray on click */
+    border-color: #b0b0b0;
+    color: #404040;
   }
   
   .chat-content-feedback-button:disabled {
@@ -134,7 +135,7 @@
     position: relative;
 
     margin-right: 10px;
-    width: calc(100% - 20px);
+    width: calc(100% - 30px);
 
     border-top: 1px solid #b8b8b8;
     display: flex;

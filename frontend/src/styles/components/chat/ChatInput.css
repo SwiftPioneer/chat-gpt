@@ -29,19 +29,19 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #3469db; /* Change this to your desired background color */
-    color: #ffffff; /* Change this to your desired text color */
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), inset 0 6px 12px rgba(255, 255, 255, 0.2);
     transition: background-color 0.3s;
 
     margin-top: 10px;
     margin-left: 20px;
+
+    border: none;
+    background-color: #ffffff; /* Soft gray background color */
 }
 
 .circle-plus {
@@ -50,7 +50,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    color: #ffffff;
+    color: #000000;
   }
   
 .comment {
@@ -59,24 +59,25 @@
     top: 50%;
     left: 50%;
     z-index: 1;
-    color: #ffffff;
+    color: #000000;
 }
 
 .chat-input-new-chat-button:hover {
-    background-color: rgb(72, 82, 224);
-    color: #fff;
+    background-color: #d3d3d3;
+    color: #404040; /* Darker gray text color on hover */
 }
 
 .chat-input-new-chat-button:active {
-    background-color: #69b6e2;
-    color: #fff;
+    background-color: #b0b0b0; /* Even darker gray on click */
+    border-color: #b0b0b0;
+    color: #404040;
 }
 
 .chat-input-new-chat-button:disabled {
+    background-color: #b0c4de;
+    border-color: #b0c4de;
+    color: #808080;
     cursor: not-allowed;
-    border: 1px solid #ccc;
-    color: #ccc;
-    background-color: #f0f0f0;
 }
 
 .chat-input-button-send-group {
@@ -153,6 +154,8 @@
     margin-left: 15px;
     margin-right: 35px;
     padding: 10px;
+
+    font-size: 0.9rem;
     
 }
 

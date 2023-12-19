@@ -54,7 +54,7 @@
 
     border-radius: 7px;
     float: center;
-    width: calc(100% - 60px);
+    width: calc(100% - 70px);
     background-color: #ffffff00;
     display: flex;
     flex-direction: row;

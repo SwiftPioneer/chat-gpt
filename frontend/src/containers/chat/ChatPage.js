@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faAlignLeft, faList } from '@fortawesome/free-solid-svg-icons';
 import { publish } from '../../event/event';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -116,7 +116,11 @@ const ChatPage = () => {
               
               <SysMessage initialStatus={false} chatMsg="Generating answers for you..."/>
               
-              <div className='chat-content-answer'>
+              <div className='chat-content-answer-header'>
+                <FontAwesomeIcon icon={faList} size='lg'/>
+                &nbsp;&nbsp;&nbsp;Sources
+              </div>
+              <div className='chat-content-answer-header'>
                 <FontAwesomeIcon icon={faAlignLeft} size='lg'/>
                 &nbsp;&nbsp;&nbsp;Answer
               </div>
@@ -213,7 +217,11 @@ const ChatPage = () => {
         setChatContents(prevComponents => [
           ...prevComponents,
           <>
-          <div className='chat-content-answer'>
+          <div className='chat-content-answer-header'>
+            <FontAwesomeIcon icon={faList} size='lg'/>
+            &nbsp;&nbsp;&nbsp;Sources
+          </div>
+          <div className='chat-content-answer-header'>
             <FontAwesomeIcon icon={faAlignLeft} size='lg'/>
             &nbsp;&nbsp;&nbsp;Answer
           </div>
