@@ -1,10 +1,10 @@
 import React from 'react';
 
-import '../../styles/components/chat/ChatContent.css';
+import '../../../styles/components/chat/Content.css';
 
 const ChatContent = ({ containerRef, chatContents}) => {
   return (
-    <div ref={containerRef} className='chat-content'>
+    <div ref={containerRef} className='chat-content-container'>
       {chatContents}
     </div>
   );

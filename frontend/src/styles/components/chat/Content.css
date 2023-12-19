@@ -1,27 +1,23 @@
-.chat-content {
-    margin-top: 50px;
-    grid-row-start: 1;
+.chat-content-container {
+    grid-row-start: 2;
     grid-row-end: 3;
     grid-column: 2;
     overflow-y: auto;
-    margin-right: 25px;
 }
 
-.chat-content::-webkit-scrollbar {
-    width: 12px;
+.chat-content-container::-webkit-scrollbar {
+    width: 9px;
 }
   
-.chat-content::-webkit-scrollbar-thumb {
+.chat-content-container::-webkit-scrollbar-thumb {
     background-color: gray;
-    border-radius: 5px;
 }
 
-.chat-content::-webkit-scrollbar-track {
+.chat-content-container::-webkit-scrollbar-track {
     background-color: #f1f1f1;
-    border-radius: 5px;
 }
 
-.chat-content::-webkit-scrollbar-corner {
+.chat-content-container::-webkit-scrollbar-corner {
     background-color: #f1f1f1;
 }
 
@@ -85,4 +81,4 @@
     right: 0;
     bottom: 55px;
     border-top: 1px solid #b8b8b8;
-  }
+}

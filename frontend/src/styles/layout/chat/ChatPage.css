@@ -1,27 +1,21 @@
 .chat-container {
-    background: linear-gradient(180deg, #ffffff, #5c92e4); 
-    border-radius: 10px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     display: flex;
-    color: #fff;
+    background-color: #fcfcf9;
     font-family: Arial, sans-serif;
 
-
     display: grid;
-    row-gap: 5%;
-    grid-template-rows: 15% 50% 20%;
-    grid-template-columns: 35% 65%;
+    grid-template-rows: 5% 70% 25%;
+    grid-template-columns: 300px calc(100% - 300px);
 
-    width: 90vw;
-    height: 90vh;
+    width: 100vw;
+    height: 100vh;
     min-width: 540px;
     min-height: 500px;
-    max-width: 90vw;
-    max-height: 90vh;
     position: relative;
-    border: 1px solid #000; /* Optional: Add a border for visualization */
-
     box-sizing: border-box;
+
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 .chat-header {

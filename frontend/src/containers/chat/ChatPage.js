@@ -11,13 +11,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../../styles/global.css';
 import '../../styles/layout/chat/ChatPage.css';
 
-import ChatContent from '../../components/chat/ChatContent';
-import { SysMessage } from '../../components/chat/ChatContent/SysMessage'
-import ChatHistory from '../../components/chat/ChatHistory';
-import ChatInput from '../../components/chat/ChatInput';
-import ImageBanner from '../../components/chat/ImageBanner';
 
-import { chopString } from '../../utils/utils';
+import ChatTitle from '../../components/chat/ChatTitle';
+import Sidebar from '../../components/chat/Sidebar/Sidebar';
+import ChatContent from '../../components/chat/Content/ChatContent';
+import ChatInput from '../../components/chat/ChatInput';
+
+import { SysMessage } from '../../components/chat/Content/SysMessage'
+
 import { API_BASE_URL } from '../../utils/const';
 
 
@@ -26,13 +27,15 @@ const ChatPage = () => {
   const containerRef = useRef(null);
   const chatlistcontainerRef = useRef(null);
 
+  const [chatTitle, setChatTitle] = useState('');
+
   const [isWaiting, setIsWaiting] = useState(false);
   const [canEdit, setCanEdit] = useState(true);
   const [chatText, setChatText] = useState('');
+  const [messages, setMessages] = useState([]);
   const [chatLists, setChatLists] = useState([]);
   const [chatContents, setChatContents] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
 
   const [isLearnActive, setIsLearnActive] = useState(false);
   const [isSendBtnActive, setIsSendBtnActive] = useState(false);
@@ -43,6 +46,21 @@ const ChatPage = () => {
   }, []);
 
   useEffect(() => {
+    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    publish('endLoading');
+
+    if (chatContents.length == 0 || selectedChat == 0 || chatContents.length == 1 && chatContents[0].props.children.length == 0) {
+      setChatTitle('New chat');
+    }
+  }, [chatContents]);
+
+
+  useEffect(() => {
+    //chatlistcontainerRef.current.scrollTop = chatlistcontainerRef.current.scrollHeight;
+  }, [chatLists]);
+
+
+  useEffect(() => {
     refreshChatList();
   }, [selectedChat, messages]);
 
@@ -50,12 +68,12 @@ const ChatPage = () => {
     const newChatLists = messages.map(item => (
       <React.Fragment key={item.id}>
         {item.datetime && <div className='chat-history-date'>{item.datetime}</div>}
-        <div className='chat-history-body'  style = {{backgroundColor: selectedChat != item.id ? 'rgba(255, 255, 255, 0.2)' : 'white'}}>
-          <Link onClick={() => chatSelected(item.id)} style={{ color: 'black', textDecoration: 'none', height: '100%' }}>
+        <div className={selectedChat != item.id ? 'chat-history-body' : 'chat-history-body disabled'}>
+          <Link onClick={() => chatSelected(item.id, item.title)} style={{ color: '#646464', textDecoration: 'none', height: '100%' }}>
             {item.title}
           </Link>
           <button className='button-del' onClick={() => delClicked(item.id, item.title)} disabled={isWaiting}>
-            <FontAwesomeIcon icon={faTrash} />
+            <FontAwesomeIcon icon={faTrash} size='lg'/>
           </button>
         </div>
       </React.Fragment>
@@ -113,14 +131,6 @@ const ChatPage = () => {
       toast.error('Error fetching chat list: ' + error);
     }
   }
-  useEffect(() => {
-    containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    publish('endLoading');
-  }, [chatContents]);
-
-  useEffect(() => {
-    chatlistcontainerRef.current.scrollTop = chatlistcontainerRef.current.scrollHeight;
-  }, [chatLists]);
 
   useEffect(() => {
     if (selectedChat == 0 || selectedChat == null)
@@ -222,8 +232,9 @@ const ChatPage = () => {
       });
   }
 
-  const chatSelected = chat_id => {
+  const chatSelected = (chat_id, chat_title) => {
     setSelectedChat(chat_id);
+    setChatTitle(chat_title);
   }
 
   const delClicked = (chat_id, chat_title) => {
@@ -259,9 +270,9 @@ const ChatPage = () => {
   return (
     <div>
       <div className='chat-container'>
-        <ImageBanner imgPath="images/banner.png"/>
+        <Sidebar chatlistcontainerRef={chatlistcontainerRef} chatLists={chatLists} />
 
-        <ChatHistory chatlistcontainerRef={chatlistcontainerRef} chatLists={chatLists} />
+        <ChatTitle chatTitle={chatTitle} />
 
         <ChatContent containerRef={containerRef} chatContents={chatContents}/>
 

@@ -1,0 +1,91 @@
+.chat-history-container {
+    grid-row: 2;
+    grid-column: 1;
+    
+    margin-left: 10px;
+    margin-bottom: 25px;
+    overflow-y: auto;
+
+    position: relative;
+}
+
+.chat-history-container::-webkit-scrollbar {
+    width: 9px;
+}
+  
+.chat-history-container::-webkit-scrollbar-thumb {
+    background-color: rgb(182, 182, 182);
+    border-radius: 4px;
+}
+
+.chat-history-container::-webkit-scrollbar-track {
+    background-color: #ffffff00;
+}
+
+.chat-history-container::-webkit-scrollbar-corner {
+    background-color: #f1f1f1;
+}
+
+.chat-history-date {
+    padding-left: 40px;
+    margin-bottom: 10px;
+
+    font-size: 0.875rem;
+    color: rgb(167, 167, 167);
+
+    opacity: 0;
+    animation: fadeIn 0.7s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.chat-history-body {
+    position: relative; 
+    margin-bottom: 10px;
+
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    border-radius: 7px;
+    float: center;
+    width: calc(100% - 60px);
+    background-color: #ffffff00;
+    display: flex;
+    flex-direction: row;
+
+    transition: background-color 0.3s ease;
+
+    transform: translateX(-50px);
+    animation: Slide 0.7s ease-out forwards;
+
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 550;
+    line-height: 1.5;
+    color: #646464;
+}
+
+@keyframes Slide {
+    to {
+        transform: translateY(0);
+    }
+}
+
+.chat-history-body:hover {
+    background-color: #e8e8e3;
+}
+
+/* Button click effect */
+.chat-history-body:active {
+    background-color: #cfcfc9;
+}
+
+.chat-history-body.disabled {
+    background-color: #d8d7d0;
+}

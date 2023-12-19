@@ -1,0 +1,35 @@
+.chat-sidebar {
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column: 1;
+
+    display: grid;
+    row-gap: 20px;
+    grid-template-rows: 90px calc(100% - 110px);
+    grid-template-columns: 100%;
+    position: relative;
+
+    background-color: #f3f3ee;
+}
+
+.chat-sidebar-vertical-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    border-right: 1px solid #e7e7e0;
+}
+
+.banner-container {
+    grid-row: 1;
+    grid-column: 1;
+    align-items: center;
+    
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.image-banner {
+    width: auto;
+    height: 70px;
+}

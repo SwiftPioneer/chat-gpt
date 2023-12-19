@@ -1,0 +1,24 @@
+.chat-title-container {
+    grid-row: 1;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.chat-title {
+    margin-left: 30px;
+    bottom: 0px;
+    color: rgb(19 52 59);
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+.chat-title-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 1px solid #e7e7e0;
+}
