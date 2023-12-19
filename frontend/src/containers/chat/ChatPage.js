@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import { publish } from '../../event/event';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -109,17 +109,21 @@ const ChatPage = () => {
         {
           messageString.map(item => (
             <React.Fragment>
+              <div className='chat-content-gap-horizontal-line'></div>
               <div className='chat-content-user'>
                 {item.question}
               </div>
               
               <SysMessage initialStatus={false} chatMsg="Generating answers for you..."/>
               
+              <div className='chat-content-answer'>
+                <FontAwesomeIcon icon={faAlignLeft} size='lg'/>
+                &nbsp;&nbsp;&nbsp;Answer
+              </div>
               <div className='chat-content-ai'>
                 {item.answer}
                 <br/><br/>
                 <button className='chat-content-feedback-button'>Give Feedback</button>
-                <div className='chat-content-ai-horizontal-line'></div>
               </div>
             </React.Fragment>
           ))
@@ -166,35 +170,36 @@ const ChatPage = () => {
     if (chatLists.length == 0 || selectedChat == 0 || chatLists.length == 1 && chatLists[0].props.children.length == 0)
       isNewChat = true;
 
-
-    // Api Call
-    setChatContents(prevComponents => [
-      ...prevComponents,
-      <>
-      <div className='chat-content-user'>
-      {
-        chatText.split('\n').map((line, index) => (
-          <React.Fragment>
-            {line}
-            <br />
-          </React.Fragment>
-        ))
-      }
-      </div>
-      {
-        isLearnActive ? 
-        <></> :
-        <SysMessage initialStatus={true} chatMsg="Generating answers for you..."/>
-      }
-      </>
-    ]);
-
-    setChatText("");
-    setIsSendBtnActive(false);
     if (!isLearnActive) {
+      // Api Call
+      setChatContents(prevComponents => [
+        ...prevComponents,
+        <>
+        <div className='chat-content-gap-horizontal-line'></div>
+        <div className='chat-content-user'>
+        {
+          chatText.split('\n').map((line, index) => (
+            <React.Fragment>
+              {line}
+              <br />
+            </React.Fragment>
+          ))
+        }
+        </div>
+        {
+          isLearnActive ? 
+          <></> :
+          <SysMessage initialStatus={true} chatMsg="Generating answers for you..."/>
+        }
+        </>
+      ]);
+      setChatText("");
+      setIsSendBtnActive(false);
       getResponseFromServer(isNewChat);
     }
     else {
+      setChatText("");
+      setIsSendBtnActive(false);
       toast.info("Thanks for your feedback");
     }
   };
@@ -208,12 +213,15 @@ const ChatPage = () => {
         setChatContents(prevComponents => [
           ...prevComponents,
           <>
+          <div className='chat-content-answer'>
+            <FontAwesomeIcon icon={faAlignLeft} size='lg'/>
+            &nbsp;&nbsp;&nbsp;Answer
+          </div>
           <div className='chat-content-ai'>
           {response.data.message}
           <br/>
           <br/>
           <button className='chat-content-feedback-button'>Give Feedback</button>
-          <div className='chat-content-ai-horizontal-line'></div>
           </div>
           </>
         ]);

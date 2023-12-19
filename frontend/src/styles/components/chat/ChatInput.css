@@ -3,6 +3,8 @@
     grid-column: 2;
     position: relative; 
     display: flex;
+
+    padding-left: 30px;
 }
 
 .chat-input-rounded-rect {

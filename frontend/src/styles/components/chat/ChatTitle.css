@@ -5,12 +5,16 @@
     position: relative;
     display: flex;
     align-items: center;
+
+    background-color: #fcfcf9;
+    
+    z-index: 1;
 }
 
 .chat-title {
     margin-left: 30px;
     bottom: 0px;
-    color: rgb(19 52 59);
+    color: rgb(63, 70, 71);
     font-family: sans-serif;
     font-weight: 600;
 }
