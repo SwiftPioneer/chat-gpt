@@ -53,7 +53,7 @@ const ChatPage = () => {
           <Link onClick={() => chatSelected(item.id)} style={{ color: 'black', textDecoration: 'none', height: '100%' }}>
             {item.title}
           </Link>
-          <button className='button-del' onClick={() => delClicked(item.id)} disabled={isWaiting}>
+          <button className='button-del' onClick={() => delClicked(item.id, item.title)} disabled={isWaiting}>
             <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
@@ -155,6 +155,7 @@ const ChatPage = () => {
     if (chatLists.length == 0 || selectedChat == 0 || chatLists.length == 1 && chatLists[0].props.children.length == 0)
       isNewChat = true;
 
+
     // Api Call
     setChatContents(prevComponents => [
       ...prevComponents,
@@ -169,13 +170,22 @@ const ChatPage = () => {
         ))
       }
       </div>
-      <SysMessage initialStatus={true} chatMsg="Generating answers for you..."/>
+      {
+        isLearnActive ? 
+        <></> :
+        <SysMessage initialStatus={true} chatMsg="Generating answers for you..."/>
+      }
       </>
     ]);
 
     setChatText("");
     setIsSendBtnActive(false);
-    getResponseFromServer(isNewChat);
+    if (!isLearnActive) {
+      getResponseFromServer(isNewChat);
+    }
+    else {
+      toast.info("Thanks for your feedback");
+    }
   };
 
   const getResponseFromServer = isNewChat => {
@@ -215,20 +225,19 @@ const ChatPage = () => {
     setSelectedChat(chat_id);
   }
 
-  const delClicked = chat_id => {
+  const delClicked = (chat_id, chat_title) => {
     const postData = { username: "user", chat_id: chat_id };
     axios.post(`${API_BASE_URL}/delete-chat`, postData)
       .then(response => {
         setChatContents([]);
         getChatListFromSever(postData);
         
-        toast.success("Chat Deleted Successfully.");
+        toast.success(`Chat history  '${chat_title}'  removed.`);
       })
       .catch(error => toast.error('Error fetching data:' + error));
   }
 
   const learnClicked = () => {
-    toast.info('Learn button clicked.');
     setIsLearnActive(isLearnActive ? false : true);
   };
 
