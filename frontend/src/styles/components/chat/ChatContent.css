@@ -34,12 +34,13 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 15px;
     color: #fff;
     font-family: Arial, sans-serif;
 }
 
 .chat-content-ai {
+    position: relative;
     margin-right: 10px;
     margin-bottom: 10px;
     float: left;
@@ -49,7 +50,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 15px;
     color: #000;
     font-family: Arial, sans-serif;
 }
@@ -63,7 +64,23 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 15px;
     color: #fff;
     font-family: Arial, sans-serif;
 }
+
+.chat-content-feedback-button {
+    height: 30px;
+    width:max-content;
+    border: none;
+    color: #286bfa;
+    background-color: #9bbaff;
+}
+
+.chat-content-ai-horizontal-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 55px;
+    border-top: 1px solid #b8b8b8;
+  }

@@ -85,56 +85,57 @@
 
 .chat-input-button-send {
     position: absolute;
-    width: 50px;
+    width: 40px;
     height: 30px;
     right: 20px;
     border: none;
     cursor: pointer;
+    background-color: #fff;
     transition: background-color 0.3s ease;
 }
 
 .chat-input-button-send:hover {
-    background-color: #3498db;
-    color: #fff;
+    color: #2e2e2e;
 }
 
 .chat-input-button-send:active {
-    background-color: #c5d6e0;
-    color: #fff;
+    color: #b1b1b1;
 }
 
 .chat-input-button-send:disabled {
     cursor: not-allowed;
-    border: 1px solid #ccc;
-    color: #ccc;
-    background-color: #f0f0f0;
+    color:gray;
 }
 
 .chat-input-button-learn {
     position: absolute;
-    width: 50px;
+    width: 40px;
     height: 30px;
-    right: 90px;
+    right: 60px;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    background-color: #fff;
+    color: black;
+    transition: color 0.3s ease;
 }
 
-.chat-input-button-learn:hover {
-    background-color: #3498db;
-    color: #fff;
+.chat-input-button-learn-inactive:hover {
+    color: #2e2e2e;
 }
 
-.chat-input-button-learn:active {
-    background-color: #c5d6e0;
-    color: #fff;
+.chat-input-button-learn-inactive:active {
+    color: #b1b1b1;
 }
 
-.chat-input-button-learn:disabled {
-    cursor: not-allowed;
-    border: 1px solid #ccc;
-    color: #ccc;
-    background-color: #f0f0f0;
+.chat-input-button-learn-inactive {
+    position: absolute;
+    width: 40px;
+    height: 30px;
+    right: 60px;
+    border: none;
+    cursor: pointer;
+    background-color: #fff;
+    color: rgb(190, 190, 190);
 }
 
 .chat-input-textarea-field {

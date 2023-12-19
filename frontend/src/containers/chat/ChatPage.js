@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { publish } from '../../event/event';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 import '../../styles/global.css';
 import '../../styles/layout/chat/ChatPage.css';
-import 'react-toastify/dist/ReactToastify.css';
 
 import ChatContent from '../../components/chat/ChatContent';
-import ChatContentServerStatus from '../../components/chat/ChatContent/ServerStatus'
+import { SysMessage } from '../../components/chat/ChatContent/SysMessage'
 import ChatHistory from '../../components/chat/ChatHistory';
 import ChatInput from '../../components/chat/ChatInput';
+
+import { chopString } from '../../utils/utils';
+import { API_BASE_URL } from '../../utils/const';
 
 
 const ChatPage = () => {
@@ -26,48 +31,89 @@ const ChatPage = () => {
   const [chatLists, setChatLists] = useState([]);
   const [chatContents, setChatContents] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+
+  const [isLearnActive, setIsLearnActive] = useState(false);
+  const [isSendBtnActive, setIsSendBtnActive] = useState(false);
 
   useEffect(() => {
     const postData = { username: "user" };
     getChatListFromSever(postData);
   }, []);
 
-  const getChatListFromSever = (postData) => {
-    axios.post('http://localhost:5000/api/get-chat-list', postData)
-      .then(response => {
-        setCanEdit(true);
-        let active_id = response.data.active_id;
-        setSelectedChat(active_id);
-        
-        setChatLists([
-          <>
-          {
-            response.data.message.map(item => (
-              <React.Fragment>
-                {
-                  item.datetime ? <div className='chat-history-date'>{item.datetime}</div> : <></>
-                }
-                <div className='chat-history-body'>
-                  <Link onClick={() => chatSelected(item.id)} style={{color:'black', textDecoration: 'none', height:'100%'}}>
-                    new chat {item.id}
-                  </Link>
-                  <button className='button-del' onClick={() => delClicked(item.id)}  disabled={isWaiting}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
-              </React.Fragment>
-            ))
-          }
-          </>,
-        ]);
+  useEffect(() => {
+    refreshChatList();
+  }, [selectedChat]);
 
-        textareaRef.current.focus();
-      })
-      .catch(error => toast.error('Error fetching data:' + error));
+  const refreshChatList = () => {
+    const newChatLists = messages.map(item => (
+      <React.Fragment key={item.id}>
+        {item.datetime && <div className='chat-history-date'>{item.datetime}</div>}
+        <div className='chat-history-body'  style = {{backgroundColor: selectedChat == item.id ? 'rgba(255, 255, 255, 0.2)' : 'white'}}>
+          <Link onClick={() => chatSelected(item.id)} style={{ color: 'black', textDecoration: 'none', height: '100%' }}>
+            {item.title}
+          </Link>
+          <button className='button-del' onClick={() => delClicked(item.id)} disabled={isWaiting}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      </React.Fragment>
+    ));
+
+    setChatLists([<>{newChatLists}</>]);
   }
 
+  const getChatListFromSever = async (postData) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/get-chat-list`, postData);
+      setCanEdit(true);
+      const activeId = response.data.active_id;
+      setSelectedChat(activeId);
+      setMessages(response.data.message);
+
+      refreshChatList(response, activeId);
+      textareaRef.current.focus();
+    } catch (error) {
+      toast.error('Error fetching chat list: ' + error);
+    }
+  }
+
+  const getChatContentFromServer = async (postData) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/get-chat-content`, postData);
+
+      let messageString = response.data.message;
+      setCanEdit(false);
+      setChatContents([
+        <>
+        {
+          messageString.map(item => (
+            <React.Fragment>
+              <div className='chat-content-user'>
+                {item.question}
+              </div>
+              
+              <SysMessage initialStatus={false} chatMsg="Generating answers for you..."/>
+              
+              <div className='chat-content-ai'>
+                {item.answer}
+                <br/><br/>
+                <button className='chat-content-feedback-button'>Give Feedback</button>
+                <div className='chat-content-ai-horizontal-line'></div>
+              </div>
+            </React.Fragment>
+          ))
+        }
+        </>
+      ]);
+      textareaRef.current.focus();
+    } catch(error) {
+      toast.error('Error fetching chat list: ' + error);
+    }
+  }
   useEffect(() => {
     containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    publish('endLoading');
   }, [chatContents]);
 
   useEffect(() => {
@@ -75,71 +121,38 @@ const ChatPage = () => {
   }, [chatLists]);
 
   useEffect(() => {
-    if (selectedChat == 0)
-      toast.warning("Chat selection removed.");
-    if (selectedChat == 0 || selectedChat == null) {
+    if (selectedChat == 0 || selectedChat == null)
       return;
-    }
 
     const postData = { username: "user", chat_id: selectedChat };
-    axios.post('http://localhost:5000/api/get-all-chat', postData)
-      .then(response => {
-
-        let messageString = response.data.message;
-        setCanEdit(false);
-        setChatContents([
-          <>
-          {
-            messageString.map(item => (
-              <React.Fragment>
-                <div className='chat-content-user'>
-                  {item.question}
-                </div>
-                
-                <ChatContentServerStatus waitingForServer={false}/>
-                
-                <div className='chat-content-ai'>
-                  {item.answer}
-                </div>
-              </React.Fragment>
-            ))
-          }
-          </>
-        ]
-        );
-
-        toast.success("Chat (" + selectedChat + ") selected.");
-        textareaRef.current.focus();
-      })
-      .catch(error => toast.error('Error fetching data:' + error));
+    getChatContentFromServer(postData);
   }, [selectedChat]);
 
   const handleChatInputKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendClicked();
-    }
+    } 
   }
 
   const handleChatTextChange = (event) => {
     setChatText(event.target.value);
+    if (event.target.value == "")
+      setIsSendBtnActive(false);
+    else
+      setIsSendBtnActive(true);
   }
 
   const sendClicked = () => {
+    let isNewChat = false;
+
     if (chatText === "") {
       toast.error("Type your message.");
       return;
     }
 
-    if (chatLists.length == 0 || selectedChat == 0) {
-      toast.warning("To start, create or select a chat please.");
-      return;
-    }
-
-    if (chatLists.length == 1 && chatLists[0].props.children.length == 0) {
-      toast.warning("To start, create or select a chat please.");
-      return;
-    }
+    if (chatLists.length == 0 || selectedChat == 0 || chatLists.length == 1 && chatLists[0].props.children.length == 0)
+      isNewChat = true;
 
     // Api Call
     setChatContents(prevComponents => [
@@ -155,24 +168,21 @@ const ChatPage = () => {
         ))
       }
       </div>
-
-      <ChatContentServerStatus waitingForServer={isWaiting}/>
+      <SysMessage initialStatus={true} chatMsg="Generating answers for you..."/>
       </>
     ]);
 
     setChatText("");
-    askAQuestion();
+    setIsSendBtnActive(false);
+    getResponseFromServer(isNewChat);
   };
 
-  const askAQuestion = () => {
-    const postData = { username: "user", prompt: chatText };
+  const getResponseFromServer = isNewChat => {
+    const postData = { username: "user", prompt: chatText, learn: isLearnActive };
     setIsWaiting(true);
-    axios.post('http://localhost:5000/api/ask-a-question', postData)
+    axios.post(`${API_BASE_URL}/get-response-message`, postData)
       .then(response => {
-        setTimeout(() => {
-          setIsWaiting(false);
-        }, 1000);
-        
+        setIsWaiting(false);
         setChatContents(prevComponents => [
           ...prevComponents,
           <>
@@ -188,11 +198,31 @@ const ChatPage = () => {
           </div>
           </>
         ]);
+
+        if (isNewChat) {
+          const newChatId = response.data.newChatId;
+
+          setSelectedChat(newChatId);
+          setChatLists(prevComponents => [
+            ...prevComponents,
+            <React.Fragment>
+              <div className='chat-history-body'>
+                <Link onClick={() => {chatSelected(newChatId);} } style={{color:'black', textDecoration: 'none', height:'100%'}}>
+                  {response.data.title}
+                </Link>
+                <button className='button-del' onClick={() => delClicked(newChatId)}  disabled={isWaiting}>
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+            </React.Fragment>
+          ]);
+        }
       })
       .catch(error => toast.error('Error fetching data:' + error))
       .finally(() => {
         textareaRef.current.focus();
-      });      
+        publish('endLoading');
+      });
   }
 
   const chatSelected = chat_id => {
@@ -201,7 +231,7 @@ const ChatPage = () => {
 
   const delClicked = chat_id => {
     const postData = { username: "user", chat_id: chat_id };
-    axios.post('http://localhost:5000/api/delete-chat', postData)
+    axios.post(`${API_BASE_URL}/delete-chat`, postData)
       .then(response => {
         setChatContents([]);
         getChatListFromSever(postData);
@@ -213,17 +243,21 @@ const ChatPage = () => {
 
   const learnClicked = () => {
     toast.info('Learn button clicked.');
+    setIsLearnActive(isLearnActive ? false : true);
   };
 
   const newChatClicked = () => {
     setChatContents([]);
     const postData = { username: "user" };
-    axios.post('http://localhost:5000/api/create-new-chat', postData)
+    axios.post(`${API_BASE_URL}/create-new-chat`, postData)
       .then(response => {
-        getChatListFromSever(postData);
-        toast.success("New chat created.");
+        if (response.data.message == 'success') {
+          setSelectedChat(0);
+        }
       })
       .catch(error => toast.error('Error fetching data:' + error));
+
+    textareaRef.current.focus();
   };
 
   return (
@@ -237,7 +271,7 @@ const ChatPage = () => {
 
         <ChatContent containerRef={containerRef} chatContents={chatContents}/>
 
-        <ChatInput textareaRef={textareaRef} chatText={chatText} canEdit={canEdit} handleChatInputKeyDown={handleChatInputKeyDown} handleChatTextChange={handleChatTextChange} sendClicked={sendClicked} learnClicked={learnClicked} newChatClicked={newChatClicked} isWaiting={false} />
+        <ChatInput textareaRef={textareaRef} chatText={chatText} canEdit={canEdit} handleChatInputKeyDown={handleChatInputKeyDown} handleChatTextChange={handleChatTextChange} sendClicked={sendClicked} learnClicked={learnClicked} newChatClicked={newChatClicked} isSendBtnActive={isSendBtnActive} isLearnActive={isLearnActive}/>
 
         <ToastContainer
           position="top-right"

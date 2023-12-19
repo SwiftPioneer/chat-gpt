@@ -21,7 +21,7 @@ def db_add_chat_log(log_data):
 
 
 
-def db_get_all_data_for_chat(username, chat_id):
+def db_get_all_content_for_chat(username, chat_id):
   collection = db[CHAT_LOGS_COLLECTION_NAME]
 
   filter_query = { "id": chat_id, "header": 0, "user": username }

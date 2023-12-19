@@ -1,14 +1,54 @@
-import React from 'react';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import CheckIcon from '@mui/icons-material/Check';
+import { subscribe, unsubscribe } from '../../../event/event';
 
-import '../../../styles/components/chat/ChatContent.css';
+export default function ServerStatus({status}) {
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
 
-const ServerStatus = ({ waitingForServer }) => {
+  const compSize = 24;
+
+  React.useEffect(() => {
+    subscribe('startLoading', onStartLoading);
+    subscribe('endLoading', onEndLoading);
+
+    //console.log(status);
+    if (status == true){
+      onStartLoading();
+      //console.log("onStartLoading");
+    }
+    if (status == false){
+      onEndLoading();
+      //console.log("onEndLoading");
+    }
+  }, []);
+
+  const onStartLoading = () => {
+    setSuccess(false);
+    setLoading(true);
+  }
+
+  const onEndLoading = (event) => {
+    setSuccess(true);
+    setLoading(false);
+  }
+
   return (
-    <div className='chat-content-server-status'>
-        <div className={waitingForServer ? 'loading-circle' : 'loading-done' }></div>
-        <div className='loading-text'>Generating answers for you...</div>
-    </div>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ m: 1, position: 'relative' }}>
+        {success? <CheckIcon color='success' /> : ""}
+        {loading && (<CircularProgress
+          size={compSize}
+          sx={{
+            // position: 'absolute',
+            top: -compSize / 2,
+            left: -compSize / 2,
+            zIndex: 1,
+          }}
+        />)}
+      </Box>
+    </Box>
   );
-};
-
-export default ServerStatus;
+}

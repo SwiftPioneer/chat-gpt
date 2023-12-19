@@ -2,12 +2,15 @@ from flask import Flask, request, jsonify, g
 from datetime import datetime
 from flask_cors import CORS
 from openai import OpenAI
+import random
 
-from db_setup.mysql.database_handler import db_add_chat_log, db_get_all_data_for_chat, db_create_new_chat, db_get_chat_list, db_remove_chat
+from db_setup.mysql.database_handler import db_add_chat_log, db_get_all_content_for_chat, db_create_new_chat, db_get_chat_list, db_remove_chat
 
 
+TITLE_LEN = 15
 MODEL_GPT_4 = "gpt-4"
 MODEL_GPT_3_5 = "gpt-3.5-turbo"
+
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes in the app
@@ -49,9 +52,10 @@ def hello():
 
 
 
-@app.route("/api/ask-a-question", methods=['POST']) 
+@app.route("/api/get-response-message", methods=['POST']) 
 def ask_a_question():
     if request.method == 'POST': 
+        newChatCreated = False
         username = request.json['username']
         prompt = request.json['prompt']
         response = get_completion(prompt)
@@ -60,9 +64,14 @@ def ask_a_question():
         current_time = datetime.now()
         formatted_time = current_time.strftime("%Y-%m-%d")
 
+        title = prompt[:TITLE_LEN + int(random.random()) % 3]
+        if len(prompt) > TITLE_LEN:
+            title += '...'
+
         current_chat_id = app.config['current_chat_id']
         if current_chat_id == 0:
-            current_chat_id = db_create_new_chat(username, formatted_time)
+            current_chat_id = db_create_new_chat(username, formatted_time, title)
+            newChatCreated = True
 
         app.config['current_chat_id'] = current_chat_id
 
@@ -76,19 +85,29 @@ def ask_a_question():
         newLog["question"] = prompt
         newLog["answer"] = response
         newLog["header"] = 0
+        newLog["title"] = ''
 
         db_add_chat_log(newLog)
 
-        return jsonify({'message': response}) 
+        responseVal = {}
+        responseVal['message'] = response
+
+        if newChatCreated:
+            responseVal['newChatId'] = current_chat_id
+            responseVal['title'] = title
+
+        return jsonify(responseVal) 
     
 
 
-@app.route("/api/get-all-chat", methods=['POST']) 
+@app.route("/api/get-chat-content", methods=['POST']) 
 def get_all_chat():
+
+    
     if request.method == 'POST': 
         username = request.json['username']
         chat_id = request.json['chat_id']
-        response = db_get_all_data_for_chat(username, chat_id)
+        response = db_get_all_content_for_chat(username, chat_id)
 
         app.config['current_chat_id'] = chat_id
 
@@ -109,14 +128,8 @@ def get_chat_list():
 @app.route("/api/create-new-chat", methods=['POST']) 
 def create_new_chat():
     if request.method == 'POST': 
-        username = request.json['username']
-
-        current_time = datetime.now()
-        formatted_time = current_time.strftime("%Y-%m-%d")
-        response = db_create_new_chat(username, formatted_time)
-
-        app.config['current_chat_id'] = response
-
+        app.config['current_chat_id'] = 0
+        response = 'success'
         return jsonify({'message': response}) 
     
 
