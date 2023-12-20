@@ -18,8 +18,9 @@ host = "your MySQL Server Host"         default: localhost
 user = "your DB user name"              default: root
 password = "your our DB Password"       default: 
 dbname = "your db name"                 default: tax_genii
-tablemame = "your table name"           default: chat_logs
+tablename = "your table name"           default: chat_logs
 ```
+4. If you already have same named table, drop your table first.
 
 
 

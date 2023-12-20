@@ -19,7 +19,7 @@ try:
 
   cursor.execute(f"CREATE DATABASE IF NOT EXISTS {dbname}")
   cursor.execute(f"use {dbname}")
-  cursor.execute(f"CREATE TABLE IF NOT EXISTS {tablemame} (_id INT AUTO_INCREMENT PRIMARY KEY, id INT, user VARCHAR(50) NOT NULL, datetime VARCHAR(50) NOT NULL, question TEXT, answer TEXT, header TINYINT, title TEXT)")
+  cursor.execute(f"CREATE TABLE IF NOT EXISTS {tablemame} (_id INT AUTO_INCREMENT PRIMARY KEY, id INT, user VARCHAR(50) NOT NULL, datetime VARCHAR(50) NOT NULL, prompt TEXT, role VARCHAR(50) NOT NULL, header TINYINT, title TEXT)")
 
   cursor.close()
   connection.close()
@@ -53,8 +53,8 @@ def db_add_chat_log(log_data):
   try:
     db_get_connection()
 
-    insert_query = f"INSERT INTO {tablemame} (id, user, datetime, question, answer, header, title) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    data_to_insert = (log_data["id"], log_data["user"], log_data["datetime"], log_data["question"], log_data["answer"], log_data["header"], log_data["title"])
+    insert_query = f"INSERT INTO {tablemame} (id, user, datetime, prompt, role, header, title) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    data_to_insert = (log_data["id"], log_data["user"], log_data["datetime"], log_data["prompt"], log_data["role"], log_data["header"], log_data["title"])
     cursor.execute(insert_query, data_to_insert)
     connection.commit()
 
@@ -69,7 +69,7 @@ def db_get_all_content_for_chat(username, chat_id):
   try:
     db_get_connection()
 
-    select_query = f"SELECT id, question, answer FROM {tablemame} where id = {chat_id} and header = 0 and user = {username}"
+    select_query = f"SELECT id, prompt, role FROM {tablemame} where id = {chat_id} and header = 0 and user = {username}"
     cursor.execute(select_query)
     filtered_data = cursor.fetchall()
   
@@ -77,8 +77,8 @@ def db_get_all_content_for_chat(username, chat_id):
     for document in filtered_data:
       new_data = {}
       new_data["id"] = document[0]
-      new_data["question"] = document[1]
-      new_data["answer"] = document[2]
+      new_data["prompt"] = document[1]
+      new_data["role"] = document[2]
       response_data.append(new_data)
 
     db_close_connection()
@@ -139,8 +139,8 @@ def db_create_new_chat(username, datetime, title):
     newLog["id"] = new_id
     newLog["user"] = username
     newLog["datetime"] = datetime
-    newLog["question"] = ""
-    newLog["answer"] = ""
+    newLog["prompt"] = ""
+    newLog["role"] = ""
     newLog["header"] = 1
     newLog["title"] = title
 

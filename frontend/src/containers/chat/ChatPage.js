@@ -20,7 +20,7 @@ import ChatInput from '../../components/chat/ChatInput';
 import AnswerMessage from '../../components/chat/Content/AnswerMessage';
 import { SysMessage } from '../../components/chat/Content/SysMessage'
 
-import { API_BASE_URL } from '../../utils/const';
+import { API_BASE_URL, ROLE_USER, ROLE_SYSTEM, ROLE_KNOWLEDGE } from '../../utils/const';
 
 
 const ChatPage = () => {
@@ -110,14 +110,22 @@ const ChatPage = () => {
         {
           messageString.map(item => (
             <React.Fragment>
-              <div className='chat-content-gap-horizontal-line'></div>
-              <div className='chat-content-user'>
-                {item.question}
-              </div>
-              <SysMessage initialStatus={false} chatMsg="Generating answers for you..."/>
-              
-              <AnswerMessage answerMsg={item.answer}/>
-
+            {
+              item.role == ROLE_USER ?
+                <>
+                  <div className='chat-content-gap-horizontal-line'></div>
+                  <div className='chat-content-user'>
+                    {item.prompt}
+                  </div>
+                </>
+              : 
+              item.role == ROLE_SYSTEM ?
+                <SysMessage initialStatus={false} chatMsg={item.prompt}/>
+              : 
+              item.role == ROLE_KNOWLEDGE ? 
+              <AnswerMessage answerMsg={item.prompt}/>
+              : <></>
+            }
             </React.Fragment>
           ))
         }

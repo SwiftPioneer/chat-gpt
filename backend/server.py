@@ -11,6 +11,11 @@ TITLE_LEN = 15
 MODEL_GPT_4 = "gpt-4"
 MODEL_GPT_3_5 = "gpt-3.5-turbo"
 
+ROLE_USER = "user"
+ROLE_SYSTEM = "system"
+ROLE_KNOWLEDGE = "knowledge"
+
+DEFAULT_SYSTEM_MESSAGE = "Generating answers for you..."
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes in the app
@@ -44,12 +49,10 @@ def get_completion(prompt):
     # )
     # return response.choices[0].message["content"]
 
-
 app.config['current_chat_id'] = 0
 @app.route('/', methods = ['GET', 'POST'])
 def hello():
     return 'Hello! Welcome to the backend server of Tax Genii.'
-
 
 
 @app.route("/api/get-response-message", methods=['POST']) 
@@ -58,6 +61,7 @@ def ask_a_question():
         newChatCreated = False
         username = request.json['username']
         prompt = request.json['prompt']
+
         response = get_completion(prompt)
 
         # Get current time
@@ -76,17 +80,23 @@ def ask_a_question():
         app.config['current_chat_id'] = current_chat_id
 
 
-
         # Adding new Chat log to Database
         newLog = {}
         newLog["id"] = current_chat_id
         newLog["user"] = username
         newLog["datetime"] = formatted_time
-        newLog["question"] = prompt
-        newLog["answer"] = response
+        newLog["prompt"] = prompt
+        newLog["role"] = ROLE_USER
         newLog["header"] = 0
         newLog["title"] = ''
+        db_add_chat_log(newLog)
 
+        newLog["prompt"] = DEFAULT_SYSTEM_MESSAGE
+        newLog["role"] = ROLE_SYSTEM
+        db_add_chat_log(newLog)
+
+        newLog["prompt"] = response
+        newLog["role"] = ROLE_KNOWLEDGE
         db_add_chat_log(newLog)
 
         responseVal = {}
@@ -102,8 +112,6 @@ def ask_a_question():
 
 @app.route("/api/get-chat-content", methods=['POST']) 
 def get_all_chat():
-
-    
     if request.method == 'POST': 
         username = request.json['username']
         chat_id = request.json['chat_id']
