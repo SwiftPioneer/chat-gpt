@@ -43,7 +43,7 @@
     flex-direction: column;
     padding: 15px;
 
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-family: Arial, sans-serif;
 }
 
@@ -82,7 +82,7 @@
 
 .chat-content-source {
     position: relative;
-
+    
     margin: 15px;
 
     width: 130px;
@@ -97,12 +97,18 @@
     text-decoration: none;
     color: #1a4e59;
 
+    display: flex;
     
     font-size: 0.85rem;
     line-height: 1.5;
     font-family: Arial, sans-serif;
 
     transition: background-color 0.3s ease;
+}
+
+.chat-content-source-text {
+    margin: 0;
+    text-wrap: wrap;
 }
 
 .chat-content-source:hover {

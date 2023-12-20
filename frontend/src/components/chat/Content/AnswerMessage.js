@@ -13,16 +13,16 @@ const AnswerMessage = ({ answerMsg }) => {
         </div>
 
         <div className='chat-content-source-container'>
-            <a href='https://www.w3schools.com/' target='_blank' className='chat-content-source'>
-                w3schools.com &nbsp;
+            <a href='https://taxfoundation.org/' target='_blank' className='chat-content-source'>
+                <p className='chat-content-source-text'>https://taxfoundation.org/</p>
                 <FontAwesomeIcon icon={faUpRightFromSquare} className='chat-content-source-link-icon'/>
             </a>
-            <a href='https://www.python.org/' target='_blank' className='chat-content-source'>
-                python.org &nbsp;
+            <a href='https://ifs.org.uk/taxlab' target='_blank' className='chat-content-source'>
+                ifs.org.uk/taxlab
                 <FontAwesomeIcon icon={faUpRightFromSquare} className='chat-content-source-link-icon' />
             </a>
-            <a href='https://nodejs.org/en/about' target='_blank' className='chat-content-source'>
-                nodejs.org about &nbsp;
+            <a href='https://jamesmadison.org/' target='_blank' className='chat-content-source'>
+                jamesmadison.org
                 <FontAwesomeIcon icon={faUpRightFromSquare} className='chat-content-source-link-icon' />
             </a>
         </div>

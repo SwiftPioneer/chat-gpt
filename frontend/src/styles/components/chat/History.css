@@ -72,11 +72,16 @@
 
 .chat-history-body-link {
     color: #646464;
-    text-decoration: none;
     width: 100%;
     padding-left: 30px;
     padding-top: 10px;
     padding-bottom: 10px;
+
+    display: block;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    text-decoration: none; 
 }
 
 @keyframes Slide {

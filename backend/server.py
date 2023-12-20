@@ -7,7 +7,6 @@ import random
 from db_setup.mysql.database_handler import db_add_chat_log, db_get_all_content_for_chat, db_create_new_chat, db_get_chat_list, db_remove_chat
 
 
-TITLE_LEN = 15
 MODEL_GPT_4 = "gpt-4"
 MODEL_GPT_3_5 = "gpt-3.5-turbo"
 
@@ -68,10 +67,7 @@ def ask_a_question():
         current_time = datetime.now()
         formatted_time = current_time.strftime("%Y-%m-%d")
 
-        title = prompt[:TITLE_LEN + int(random.random()) % 3]
-        if len(prompt) > TITLE_LEN:
-            title += '...'
-
+        title = prompt
         current_chat_id = app.config['current_chat_id']
         if current_chat_id == 0:
             current_chat_id = db_create_new_chat(username, formatted_time, title)

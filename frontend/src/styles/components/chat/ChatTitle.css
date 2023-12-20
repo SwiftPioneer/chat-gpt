@@ -13,10 +13,17 @@
 
 .chat-title {
     margin-left: 30px;
+    margin-right: 30px;
     bottom: 0px;
     color: rgb(63, 70, 71);
     font-weight: 600;
     font-size: 1.25rem;
+
+    display: block;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    text-decoration: none; 
 }
 
 .chat-title-line {
