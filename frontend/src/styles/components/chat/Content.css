@@ -29,18 +29,21 @@
 }
 
 .chat-content-user {
+    position: relative;
+    margin-right: 50px;
     margin-top: 20px;
     margin-bottom: 10px;
-    float: left;
-    width: 90%;
 
+    max-width: 90%;
+
+    float: right;
     border:none;
 
     display: flex;
     flex-direction: column;
     padding: 15px;
 
-    font-size: 1.875em;
+    font-size: 1.25rem;
     font-family: Arial, sans-serif;
 }
 
@@ -50,7 +53,7 @@
     margin-left: 30px;
     margin-right: 10px;
     float: left;
-    width: 80%;
+    width: calc(100% - 65px);
     border: none;
     display: flex;
     flex-direction: row;
@@ -138,13 +141,15 @@
 }
 
 .chat-content-server-status {
-    margin-right: 30px;
+    margin-right: 50px;
     margin-bottom: 10px;
-    float: right;
+    width: calc(100% - 60px);
     background-color: #ffffff00;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
     padding: 5px;
+
     font-family: Arial, sans-serif;
 }
 

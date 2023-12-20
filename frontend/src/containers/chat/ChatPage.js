@@ -70,7 +70,7 @@ const ChatPage = () => {
       <React.Fragment key={item.id}>
         {item.datetime && <div className='chat-history-date'>{item.datetime}</div>}
         <div className={selectedChat != item.id ? 'chat-history-body' : 'chat-history-body disabled'}>
-          <Link onClick={() => chatSelected(item.id, item.title)} style={{ color: '#646464', textDecoration: 'none', height: '100%' }}>
+          <Link className='chat-history-body-link' onClick={() => chatSelected(item.id, item.title)}>
             {item.title}
           </Link>
           <button className='button-del' onClick={() => delClicked(item.id, item.title)} disabled={isWaiting}>

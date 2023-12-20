@@ -46,11 +46,10 @@
 .chat-history-body {
     position: relative; 
     margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 10px;
 
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-right: 50px;
 
     border-radius: 7px;
     float: center;
@@ -69,6 +68,15 @@
     font-weight: 550;
     line-height: 1.5;
     color: #646464;
+}
+
+.chat-history-body-link {
+    color: #646464;
+    text-decoration: none;
+    width: 100%;
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 @keyframes Slide {
