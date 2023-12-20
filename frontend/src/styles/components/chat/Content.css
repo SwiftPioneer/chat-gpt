@@ -108,7 +108,11 @@
 
 .chat-content-source-text {
     margin: 0;
-    text-wrap: wrap;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    text-decoration: none; 
 }
 
 .chat-content-source:hover {
