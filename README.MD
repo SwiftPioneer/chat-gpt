@@ -20,7 +20,11 @@ password = "your our DB Password"       default:
 dbname = "your db name"                 default: tax_genii
 tablename = "your table name"           default: chat_logs
 ```
-4. If you already have same named table, drop your table first.
+4. If you already have table with the same name, drop your table first.
+```bash
+cd backend
+python dropdb.py
+```
 
 
 
@@ -34,10 +38,19 @@ API_KEY = "Your API KEY"
 
 ## 3. Backend
 
-#### Go to Backend and setup python libraries
+#### Locate to your backend directory.
 ```bash
 cd backend
+```
+
+#### Setup python libraries
+```bash
 pip install -r requirements.txt
+```
+
+#### If you already have table with the same name, drop your table first.
+```bash
+python dropdb.py
 ```
 
 #### Run backend
