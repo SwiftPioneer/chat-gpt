@@ -14,11 +14,11 @@ const AnswerMessage = ({ answerMsg }) => {
 
         <div className='chat-content-source-container'>
             <a href='https://taxfoundation.org/' target='_blank' className='chat-content-source'>
-                <p className='chat-content-source-text'>https://taxfoundation.org/</p>
+                <p className='chat-content-source-text'>taxfoundation.org</p>
                 <FontAwesomeIcon icon={faUpRightFromSquare} className='chat-content-source-link-icon'/>
             </a>
             <a href='https://ifs.org.uk/taxlab' target='_blank' className='chat-content-source'>
-                ifs.org.uk/taxlab
+                ifs.org.uk
                 <FontAwesomeIcon icon={faUpRightFromSquare} className='chat-content-source-link-icon' />
             </a>
             <a href='https://jamesmadison.org/' target='_blank' className='chat-content-source'>
