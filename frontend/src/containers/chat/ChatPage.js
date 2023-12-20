@@ -73,7 +73,7 @@ const ChatPage = () => {
           <Link className='chat-history-body-link' onClick={() => chatSelected(item.id, item.title)}>
             {item.title}
           </Link>
-          <button className='button-del' onClick={() => delClicked(item.id, item.title)} disabled={isWaiting}>
+          <button className='button-del' onClick={() => delClicked(item.id, item.title)}>
             <FontAwesomeIcon icon={faTrashCan} size='lg'/>
           </button>
         </div>
