@@ -33,13 +33,16 @@ def db_get_connection():
   global connection
   global cursor
 
-  connection = mysql.connector.connect(
-      host=host,
-      user=user,
-      password=password,
-      database=dbname,
-  )
-  cursor = connection.cursor()
+  try:
+    connection = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=dbname,
+    )
+    cursor = connection.cursor()
+  except mysql.connector.Error as err:
+    print(f"DB connect error: {err}")
 
 def db_close_connection():
   global connection
@@ -170,3 +173,11 @@ def db_remove_chat(username, chat_id):
   except mysql.connector.Error as err:
     print(f"Error: {err}")
     return err
+  
+def db_drop_db():
+  db_get_connection()
+
+  cursor.execute(f"DROP TABLE {tablemame}")
+  print("Table removed.")
+
+  db_close_connection()
