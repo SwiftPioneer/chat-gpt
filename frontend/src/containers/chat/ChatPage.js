@@ -107,7 +107,7 @@ const ChatPage = () => {
       setCanEdit(false);
       
       const listChatContents = messageString.map(item => (
-        <React.Fragment key={`chatContent_${item.id}`}>
+        <React.Fragment key={`chatContent_${item.id}_${new Date().getTime()}`}>
         {
           item.role == ROLE_USER ?
             <>
