@@ -3,9 +3,6 @@
 import mysql.connector
 from db_setup.mysql.db_setup import host, user, password, dbname, tablemame
 
-connection = None
-cursor = None
-
 try:
   print("Db connecting...")
   connection = mysql.connector.connect(
@@ -29,10 +26,7 @@ except mysql.connector.Error as err:
     print(f"Error: {err}")
 
 
-def db_get_connection():
-  global connection
-  global cursor
-
+def db_add_chat_log(log_data):
   try:
     connection = mysql.connector.connect(
         host=host,
@@ -41,27 +35,14 @@ def db_get_connection():
         database=dbname,
     )
     cursor = connection.cursor()
-  except mysql.connector.Error as err:
-    print(f"DB connect error: {err}")
-
-def db_close_connection():
-  global connection
-  global cursor
-
-  cursor.close()
-  connection.close()
-  
-
-def db_add_chat_log(log_data):
-  try:
-    db_get_connection()
 
     insert_query = f"INSERT INTO {tablemame} (id, user, datetime, prompt, role, header, title) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     data_to_insert = (log_data["id"], log_data["user"], log_data["datetime"], log_data["prompt"], log_data["role"], log_data["header"], log_data["title"])
     cursor.execute(insert_query, data_to_insert)
     connection.commit()
 
-    db_close_connection()
+    cursor.close()
+    connection.close()
     
   except mysql.connector.Error as err:
     print(f"Error: {err}")
@@ -70,7 +51,13 @@ def db_add_chat_log(log_data):
 
 def db_get_all_content_for_chat(username, chat_id):
   try:
-    db_get_connection()
+    connection = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=dbname,
+    )
+    cursor = connection.cursor()
 
     select_query = f"SELECT _id, prompt, role FROM {tablemame} where id = {chat_id} and header = 0 and user = {username}"
     cursor.execute(select_query)
@@ -84,7 +71,8 @@ def db_get_all_content_for_chat(username, chat_id):
       new_data["role"] = document[2]
       response_data.append(new_data)
 
-    db_close_connection()
+    cursor.close()
+    connection.close()
     return response_data
 
   except mysql.connector.Error as err:
@@ -95,10 +83,18 @@ def db_get_all_content_for_chat(username, chat_id):
 
 def db_get_chat_list(username):
   try:
-    db_get_connection()
+    connection = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=dbname,
+    )
+    cursor = connection.cursor()
 
     select_query = f"SELECT id, title, datetime FROM {tablemame} where header = 1 and user = {username}"
     cursor.execute(select_query)
+    print(cursor.rowcount)
+
     filtered_data = cursor.fetchall()
 
     response_data = []
@@ -114,7 +110,8 @@ def db_get_chat_list(username):
       previous_datetime = document[2]
       response_data.append(new_data)
 
-    db_close_connection()
+    cursor.close()
+    connection.close()
     return response_data
   
   except mysql.connector.Error as err:
@@ -125,7 +122,13 @@ def db_get_chat_list(username):
 
 def db_create_new_chat(username, datetime, title):
   try:
-    db_get_connection()
+    connection = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=dbname,
+    )
+    cursor = connection.cursor()
 
     select_query = f"SELECT id FROM {tablemame} where header = 1 and user = {username}"
     cursor.execute(select_query)
@@ -147,7 +150,8 @@ def db_create_new_chat(username, datetime, title):
     newLog["header"] = 1
     newLog["title"] = title
 
-    db_close_connection()
+    cursor.close()
+    connection.close()
     db_add_chat_log(newLog)
     return new_id
   
@@ -158,14 +162,21 @@ def db_create_new_chat(username, datetime, title):
 
 def db_remove_chat(username, chat_id):
   try:
-    db_get_connection()
+    connection = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=dbname,
+    )
+    cursor = connection.cursor()
 
     deletequery = f"DELETE FROM {tablemame} where user = {username} and id = {chat_id};"
     print(deletequery)
     cursor.execute(deletequery)
     connection.commit()
     
-    db_close_connection()
+    cursor.close()
+    connection.close()
 
     result_multiple = 'success'
     return result_multiple
@@ -175,9 +186,16 @@ def db_remove_chat(username, chat_id):
     return err
   
 def db_drop_db():
-  db_get_connection()
+    connection = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=dbname,
+    )
+    cursor = connection.cursor()
 
-  cursor.execute(f"DROP TABLE {tablemame}")
-  print("Table removed.")
+    cursor.execute(f"DROP TABLE {tablemame}")
+    print("Table removed.")
 
-  db_close_connection()
+    cursor.close()
+    connection.close()
