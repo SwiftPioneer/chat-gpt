@@ -93,8 +93,6 @@ def db_get_chat_list(username):
 
     select_query = f"SELECT id, title, datetime FROM {tablemame} where header = 1 and user = {username}"
     cursor.execute(select_query)
-    print(cursor.rowcount)
-
     filtered_data = cursor.fetchall()
 
     response_data = []
@@ -171,7 +169,6 @@ def db_remove_chat(username, chat_id):
     cursor = connection.cursor()
 
     deletequery = f"DELETE FROM {tablemame} where user = {username} and id = {chat_id};"
-    print(deletequery)
     cursor.execute(deletequery)
     connection.commit()
     

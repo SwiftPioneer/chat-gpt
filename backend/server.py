@@ -124,7 +124,6 @@ def get_chat_list():
     if request.method == 'POST': 
         username = request.json['username']
         response = db_get_chat_list(username)
-        print(response)
         return jsonify({'message': response, 'active_id': app.config['current_chat_id']}) 
 
 
