@@ -72,7 +72,7 @@ def db_get_all_content_for_chat(username, chat_id):
   try:
     db_get_connection()
 
-    select_query = f"SELECT id, prompt, role FROM {tablemame} where id = {chat_id} and header = 0 and user = {username}"
+    select_query = f"SELECT _id, prompt, role FROM {tablemame} where id = {chat_id} and header = 0 and user = {username}"
     cursor.execute(select_query)
     filtered_data = cursor.fetchall()
   

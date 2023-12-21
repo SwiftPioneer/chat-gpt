@@ -67,7 +67,7 @@ const ChatPage = () => {
 
   const refreshChatList = () => {
     const newChatLists = messages.map(item => (
-      <React.Fragment key={item.id}>
+      <React.Fragment key={`chatList_${item.id}_${new Date().getTime()}`}>
         {item.datetime && <div className='chat-history-date'>{item.datetime}</div>}
         <div className={selectedChat != item.id ? 'chat-history-body' : 'chat-history-body disabled'}>
           <Link className='chat-history-body-link' onClick={() => chatSelected(item.id, item.title)}>
@@ -80,7 +80,7 @@ const ChatPage = () => {
       </React.Fragment>
     ));
 
-    setChatLists([<>{newChatLists}</>]);
+    setChatLists([<React.Fragment key="chatLists">{newChatLists}</React.Fragment>]);
   }
 
   const getChatListFromSever = async (postData) => {
@@ -105,32 +105,29 @@ const ChatPage = () => {
 
       let messageString = response.data.message;
       setCanEdit(false);
-      setChatContents([
-        <>
+      
+      const listChatContents = messageString.map(item => (
+        <React.Fragment key={`chatContent_${item.id}`}>
         {
-          messageString.map(item => (
-            <React.Fragment>
-            {
-              item.role == ROLE_USER ?
-                <>
-                  <div className='chat-content-gap-horizontal-line'></div>
-                  <div className='chat-content-user'>
-                    {item.prompt}
-                  </div>
-                </>
-              : 
-              item.role == ROLE_SYSTEM ?
-                <SysMessage initialStatus={false} chatMsg={item.prompt}/>
-              : 
-              item.role == ROLE_KNOWLEDGE ? 
-              <AnswerMessage answerMsg={item.prompt}/>
-              : <></>
-            }
-            </React.Fragment>
-          ))
+          item.role == ROLE_USER ?
+            <>
+              <div className='chat-content-gap-horizontal-line'></div>
+              <div className='chat-content-user'>
+                {item.prompt}
+              </div>
+            </>
+          : 
+          item.role == ROLE_SYSTEM ?
+            <SysMessage initialStatus={false} chatMsg={item.prompt}/>
+          : 
+          item.role == ROLE_KNOWLEDGE ? 
+          <AnswerMessage answerMsg={item.prompt}/>
+          : <></>
         }
-        </>
-      ]);
+        </React.Fragment>
+      ));
+      setChatContents([<React.Fragment key="ChatContents">{listChatContents}</React.Fragment>]);
+
       textareaRef.current.focus();
     } catch(error) {
       toast.error('Error fetching chat list: ' + error);
@@ -173,27 +170,28 @@ const ChatPage = () => {
 
     if (!isLearnActive) {
       // Api Call
+      const newFragments = chatText.split('\n').map((line, index) => (
+        <div key={`userMessage_${index}`}>
+          {line}
+          <br />
+        </div>
+      ));
+
       setChatContents(prevComponents => [
         ...prevComponents,
-        <>
-        <div className='chat-content-gap-horizontal-line'></div>
-        <div className='chat-content-user'>
-        {
-          chatText.split('\n').map((line, index) => (
-            <React.Fragment>
-              {line}
-              <br />
-            </React.Fragment>
-          ))
-        }
-        </div>
-        {
-          isLearnActive ? 
-          <></> :
-          <SysMessage initialStatus={true} chatMsg="Generating answers for you..."/>
-        }
-        </>
+        <React.Fragment key={`userMessage_${new Date().getTime()}`}>
+          <div className='chat-content-gap-horizontal-line'></div>
+          <div className='chat-content-user'>
+            {newFragments}
+          </div>
+          {
+            isLearnActive ?
+              <></> :
+              <SysMessage key={`sysMessage_${new Date().getTime()}`} initialStatus={true} chatMsg="Generating answers for you..." />
+          }
+        </React.Fragment>
       ]);
+
       setChatText("");
       setIsSendBtnActive(false);
       getResponseFromServer(isNewChat);
@@ -211,11 +209,15 @@ const ChatPage = () => {
     axios.post(`${API_BASE_URL}/get-response-message`, postData)
       .then(response => {
         setIsWaiting(false);
+
+        const responseKey = `responseBlock_${new Date().getTime()}`;
+        const answerKey = `answerMessage_${new Date().getTime()}`;
+
         setChatContents(prevComponents => [
           ...prevComponents,
-          <>
-          <AnswerMessage answerMsg={response.data.message}/>
-          </>
+          <React.Fragment key={responseKey}>
+            <AnswerMessage key={answerKey} answerMsg={response.data.message} />
+          </React.Fragment>
         ]);
 
         if (isNewChat) {
